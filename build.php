@@ -1,5 +1,20 @@
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| Base8 Framework Builder
+|--------------------------------------------------------------------------
+|
+| Internal development tool.
+|
+| Generates the production framework file:
+|
+|     framework/Base8.php
+|
+| This script is used during Base8 development.
+|
+*/
+
 declare(strict_types=1);
 
 $start = microtime(true);

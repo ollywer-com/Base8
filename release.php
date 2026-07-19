@@ -1,5 +1,18 @@
 <?php
 
+/*
+|--------------------------------------------------------------------------
+| Base8 Release Builder
+|--------------------------------------------------------------------------
+|
+| Internal development tool.
+|
+| Creates the Base8 Starter release package.
+|
+| This script is intended only for project maintainers.
+|
+*/
+
 declare(strict_types=1);
 
 $start = microtime(true);
