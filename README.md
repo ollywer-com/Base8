@@ -224,8 +224,30 @@ framework/
 
 # Documentation
 
-- installation.md
-- routing.md
+Start here if you're new to Base8.
+
+1. 📦 Installation
+2. 🚀 Routing
+3. 📥 Requests
+4. 📤 Responses
+5. 🖼️ Views
+
+Core Features
+
+- 🍪 Cookies
+- 🔐 Sessions
+- 🔒 Cryptography
+
+Read the documentation:
+
+- [Installation](docs/installation.md)
+- [Routing](docs/routing.md)
+- [Requests](docs/requests.md)
+- [Responses](docs/responses.md)
+- [Views](docs/views.md)
+- [Cookies](docs/cookies.md)
+- [Sessions](docs/sessions.md)
+- [Cryptography](docs/crypto.md)
 
 ---
 
