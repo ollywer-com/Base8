@@ -48,6 +48,7 @@ declare(strict_types=1);
 
 PHP;
 
+$first = true;
 foreach ($files as $file) {
 
     $code = file_get_contents($file);
@@ -73,7 +74,19 @@ foreach ($files as $file) {
     $code = substr($code, strlen($header));
 
     $build .= rtrim($code) . PHP_EOL . PHP_EOL;
+
+    if ($first) {
+        $build .= PHP_EOL .
+            "namespace {" .
+            PHP_EOL .
+            PHP_EOL;
+        $first = false;
+    }
 }
+
+$build .= PHP_EOL .
+    "}" .
+    PHP_EOL;
 
 $build = rtrim($build) . PHP_EOL;
 
