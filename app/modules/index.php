@@ -6,8 +6,3 @@ function index(): void
 {
     echo 'Hello Base8!';
 }
-
-function test(): void
-{
-    echo 'test';
-}
