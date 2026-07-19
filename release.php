@@ -22,13 +22,9 @@ if (!extension_loaded('zip')) {
     exit("The ZIP extension is not enabled.\n");
 }
 
-$versionFile = __DIR__ . '/VERSION';
+require __DIR__ . '/framework/Base8.php';
 
-if (!is_file($versionFile)) {
-    exit("Missing VERSION file.\n");
-}
-
-$version = trim(file_get_contents($versionFile));
+$version = b8_version();
 
 if ($version === '') {
     exit("VERSION file is empty.\n");
@@ -50,7 +46,6 @@ $items = [
     'README.md',
     'LICENSE',
     'CHANGELOG.md',
-    'VERSION',
 
 ];
 
