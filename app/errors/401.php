@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+?><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>401 Unauthorized</title>
+</head>
+<body>
+
+<h1>401 Unauthorized</h1>
+
+<p>Authentication is required to access this resource.</p>
+
+</body>
+</html>
