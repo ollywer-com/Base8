@@ -5,7 +5,7 @@ declare(strict_types=1);
 $start = microtime(true);
 
 $source = __DIR__ . '/src';
-$output = __DIR__ . '/Base8.php';
+$output = __DIR__ . '/framework/Base8.php';
 
 if (!is_dir($source)) {
     exit('Missing source directory.');
