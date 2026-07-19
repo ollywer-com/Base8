@@ -1,13 +1,16 @@
 # Base8
 
-Base8 is a lightweight, AJAX-first PHP 8 framework designed for simplicity, performance, and predictable behavior.
+Base8 is a lightweight PHP 8 framework built around a simple idea:
 
-It provides a minimal HTTP kernel, convention-based routing, and a small collection of helper functions while staying close to native PHP.
+> **One build. One framework file. One starter package.**
+
+It stays close to native PHP, avoids unnecessary abstraction, and provides predictable behavior with zero runtime dependencies.
 
 ## Features
 
 - PHP 8+
 - Single-file framework
+- Zero runtime dependencies
 - Convention-based routing
 - Function-based modules
 - AJAX-first architecture
@@ -17,49 +20,63 @@ It provides a minimal HTTP kernel, convention-based routing, and a small collect
 - View helpers
 - Cookie helpers
 - Session helpers
-- Zero dependencies
+- Small and predictable kernel
+
+---
+
+## Philosophy
+
+Base8 is designed around a few simple principles.
+
+- Stay close to native PHP.
+- Convention over configuration.
+- Performance first.
+- Simplicity first.
+- AJAX-first.
+- Secure by default.
+- Keep the kernel small and predictable.
+- No magic.
+- No hidden behavior.
+
+---
 
 ## Requirements
 
 - PHP 8.0 or newer
-- Apache with mod_rewrite enabled
+- One of the following web servers:
+    - Apache (mod_rewrite)
+    - Nginx
+    - Microsoft IIS (URL Rewrite)
 
-## Philosophy
+---
 
-- Performance first.
-- Simplicity first.
-- Convention over configuration.
-- Use PHP, do not fight PHP.
-- Use the browser, do not fight the browser.
-- AJAX-first.
-- Secure by default.
-- Keep the kernel small and predictable.
+## Quick Start
 
+Download the latest **Base8 Starter** from the **Releases** page.
 
-## Project Structure
+The starter package already contains everything required to begin development.
 
 ```text
 project/
 
 ├── app/
+│   ├── errors/
 │   ├── modules/
-│   ├── views/
-│   └── errors/
+│   └── views/
 │
-├── public/
-│   ├── index.php
-│   ├── .htaccess
-│   ├── css/
-│   ├── js/
-│   ├── images/
-│   └── ...
+├── framework/
+│   └── Base8.php
 │
-└── Base8.php
+└── public/
+    ├── css/
+    ├── images/
+    ├── js/
+    ├── favicon.ico
+    ├── index.php
+    └── robots.txt
 ```
 
-`Base8.php` may be located anywhere. Adjust the `require` path accordingly. The web server DocumentRoot must point to `public/`.
-
-## Installation
+Point your web server DocumentRoot to the `public` directory.
 
 Create `public/index.php`.
 
@@ -73,37 +90,9 @@ require __DIR__ . '/../framework/Base8.php';
 Base8\Base8::run(__DIR__);
 ```
 
-Create `public/.htaccess`.
+See **installation.md** for complete Apache, Nginx, and IIS configuration examples.
 
-```apache
-<IfModule mod_rewrite.c>
-
-    RewriteEngine On
-
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-
-    RewriteRule ^ index.php [QSA,L]
-
-</IfModule>
-```
-
-Configure your web server so its DocumentRoot points to the `public` directory.
-
-## First Module
-
-Create `app/modules/index.php`.
-
-```php
-<?php
-
-declare(strict_types=1);
-
-function index(): void
-{
-    echo 'Hello Base8!';
-}
-```
+---
 
 ## Routing
 
@@ -116,60 +105,82 @@ function index(): void
 
 Hyphenated action names are automatically converted to camelCase.
 
+---
+
 ## Views
 
 ```php
 b8_view('users/table');
+
+b8_view('users/row', [
+    'user' => $user
+]);
 ```
 
-```php
-b8_view('users/row', ['user' => $user]);
-```
+Views can render complete pages or reusable HTML fragments.
 
-Views can render complete pages or reusable HTML fragments for AJAX responses.
+---
 
 ## Responses
 
 ```php
 b8_redirect('/login');
-b8_json(['success' => true]);
+
+b8_json([
+    'success' => true
+]);
+
 b8_status(404);
 ```
+
+---
 
 ## Cookies
 
 ```php
 b8_cookie_set('theme', 'dark');
+
 $theme = b8_cookie_get('theme');
+
 b8_cookie_delete('theme');
 ```
+
+---
 
 ## Sessions
 
 ```php
 b8_session_set('user_id', 15);
+
 $id = b8_session_get('user_id');
+
 b8_session_delete('user_id');
+
 b8_session_destroy();
 ```
 
 Sessions start automatically when required.
 
+---
+
 ## Error Pages
 
-Default framework pages:
+Supported custom error pages:
 
 ```text
-404
-405
-414
-500
+404.php
+405.php
+414.php
+500.php
 ```
 
-The framework automatically returns the appropriate HTTP status code. If a matching error page exists in `app/errors`, it is rendered.
+If a matching file exists in `app/errors`, Base8 renders it automatically.
+
+---
 
 ## Build
 
+Generate the production framework file.
 
 ```text
 php build.php
@@ -181,11 +192,28 @@ or open:
 http://localhost/project/build.php
 ```
 
+The generated framework is written to:
+
+```text
+framework/Base8.php
+```
+
+---
+
+## Documentation
+
+- installation.md
+- routing.md
+
+---
+
 ## Author
 
 **Oliver Marković**
 
-Website: https://ollywer.com
+https://ollywer.com
+
+---
 
 ## License
 
