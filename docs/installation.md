@@ -5,7 +5,10 @@ This guide explains how to install and configure a new Base8 application.
 ## Requirements
 
 - PHP 8.0 or newer
-- Apache with `mod_rewrite` enabled
+- One of the following web servers:
+    - Apache (mod_rewrite)
+    - Nginx
+    - Microsoft IIS (URL Rewrite)
 
 ## Project Structure
 
@@ -27,6 +30,7 @@ project/
     ├── images/
     ├── js/
     ├── .htaccess
+    ├── web.config
     └── index.php
 ```
 
@@ -72,6 +76,88 @@ Create `public/.htaccess`.
 ```
 
 Enable `mod_rewrite` if it is not already enabled.
+
+---
+
+## Nginx Configuration
+
+Example server configuration:
+
+```nginx
+server {
+
+    listen 80;
+
+    server_name localhost;
+
+    root /path/to/project/public;
+    index index.php;
+
+    location / {
+
+        try_files $uri $uri/ /index.php?$query_string;
+
+    }
+
+    location ~ \.php$ {
+
+        include fastcgi_params;
+
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+
+    }
+
+}
+```
+
+The `root` directive must point to the `public` directory.
+
+Adjust the PHP-FPM socket or host according to your environment.
+
+---
+
+## IIS Configuration
+
+Create `public/web.config`.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+
+    <system.webServer>
+
+        <rewrite>
+
+            <rules>
+
+                <rule name="Base8" stopProcessing="true">
+
+                    <match url=".*" />
+
+                    <conditions logicalGrouping="MatchAll">
+
+                        <add input="{REQUEST_FILENAME}" matchType="IsFile" negate="true" />
+                        <add input="{REQUEST_FILENAME}" matchType="IsDirectory" negate="true" />
+
+                    </conditions>
+
+                    <action type="Rewrite" url="index.php" />
+
+                </rule>
+
+            </rules>
+
+        </rewrite>
+
+    </system.webServer>
+
+</configuration>
+```
+
+Install the IIS URL Rewrite Module before using this configuration.
 
 ---
 
