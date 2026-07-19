@@ -1,32 +1,36 @@
 # Base8
 
-Base8 is a lightweight PHP 8 framework built around a simple idea:
-
+> **Lightweight PHP 8 framework.**
+>
 > **One build. One framework file. One starter package.**
 
-It stays close to native PHP, avoids unnecessary abstraction, and provides predictable behavior with zero runtime dependencies.
+**PHP 8+ • Single File • No Composer Required • Zero Runtime Dependencies • MIT License**
 
-## Features
+Base8 is a lightweight PHP framework designed for developers who prefer clean, predictable code over unnecessary abstraction.
 
-- PHP 8+
+It stays close to native PHP, follows convention over configuration, and provides everything needed to build modern web applications without hidden behavior or runtime dependencies.
+
+---
+
+## Why Base8?
+
+- Lightweight and fast
 - Single-file framework
 - Zero runtime dependencies
+- No Composer required
 - Convention-based routing
-- Function-based modules
 - AJAX-first architecture
-- JSON and HTML fragment responses
-- Request helpers
-- Response helpers
-- View helpers
-- Cookie helpers
-- Session helpers
+- Function-based modules
 - Small and predictable kernel
+- Close to native PHP
+- Easy to learn
+- Easy to deploy
 
 ---
 
 ## Philosophy
 
-Base8 is designed around a few simple principles.
+Base8 follows a few simple principles.
 
 - Stay close to native PHP.
 - Convention over configuration.
@@ -34,27 +38,19 @@ Base8 is designed around a few simple principles.
 - Simplicity first.
 - AJAX-first.
 - Secure by default.
-- Keep the kernel small and predictable.
 - No magic.
 - No hidden behavior.
+- Keep the kernel small and predictable.
 
 ---
 
-## Requirements
+# Quick Start
 
-- PHP 8.0 or newer
-- One of the following web servers:
-    - Apache (mod_rewrite)
-    - Nginx
-    - Microsoft IIS (URL Rewrite)
+Download the latest **Base8 Starter** from the GitHub **Releases** page.
 
----
+Extract the archive.
 
-## Quick Start
-
-Download the latest **Base8 Starter** from the **Releases** page.
-
-The starter package already contains everything required to begin development.
+Your project will look like this:
 
 ```text
 project/
@@ -90,14 +86,39 @@ require __DIR__ . '/../framework/Base8.php';
 Base8\Base8::run(__DIR__);
 ```
 
-See **installation.md** for complete Apache, Nginx, and IIS configuration examples.
+Create your first module.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+function index(): void
+{
+    echo 'Hello Base8!';
+}
+```
+
+Open:
+
+```text
+http://localhost/
+```
+
+You should see:
+
+```text
+Hello Base8!
+```
+
+Complete installation instructions, including Apache, Nginx, and IIS configuration, are available in **installation.md**.
 
 ---
 
-## Routing
+# Routing
 
 | URL | Module | Function |
-| --- | --- | --- |
+|------|--------|----------|
 | `/` | `index.php` | `index()` |
 | `/users` | `users.php` | `index()` |
 | `/users/login` | `users.php` | `login()` |
@@ -107,7 +128,7 @@ Hyphenated action names are automatically converted to camelCase.
 
 ---
 
-## Views
+# Rendering Views
 
 ```php
 b8_view('users/table');
@@ -121,7 +142,7 @@ Views can render complete pages or reusable HTML fragments.
 
 ---
 
-## Responses
+# Responses
 
 ```php
 b8_redirect('/login');
@@ -135,7 +156,7 @@ b8_status(404);
 
 ---
 
-## Cookies
+# Cookies
 
 ```php
 b8_cookie_set('theme', 'dark');
@@ -147,7 +168,7 @@ b8_cookie_delete('theme');
 
 ---
 
-## Sessions
+# Sessions
 
 ```php
 b8_session_set('user_id', 15);
@@ -163,7 +184,7 @@ Sessions start automatically when required.
 
 ---
 
-## Error Pages
+# Error Pages
 
 Supported custom error pages:
 
@@ -174,11 +195,11 @@ Supported custom error pages:
 500.php
 ```
 
-If a matching file exists in `app/errors`, Base8 renders it automatically.
+If the corresponding file exists in `app/errors`, Base8 renders it automatically.
 
 ---
 
-## Build
+# Build
 
 Generate the production framework file.
 
@@ -195,19 +216,20 @@ http://localhost/project/build.php
 The generated framework is written to:
 
 ```text
-framework/Base8.php
+framework/
+    Base8.php
 ```
 
 ---
 
-## Documentation
+# Documentation
 
 - installation.md
 - routing.md
 
 ---
 
-## Author
+# Author
 
 **Oliver Marković**
 
@@ -215,6 +237,6 @@ https://ollywer.com
 
 ---
 
-## License
+# License
 
 Released under the MIT License.
