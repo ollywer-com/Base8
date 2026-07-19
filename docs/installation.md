@@ -30,13 +30,17 @@ project/
     ├── images/
     ├── js/
     ├── .htaccess
-    ├── web.config
-    └── index.php
+    ├── favicon.ico
+    ├── index.php
+    ├── robots.txt
+    └── web.config
 ```
 
 The `framework` directory may have any name and may be located anywhere outside the public directory.
 
 The web server DocumentRoot must point to the `public` directory.
+
+The `favicon.ico`, `robots.txt`, `.htaccess`, and `web.config` files are optional and depend on your web server and application requirements.
 
 ---
 
