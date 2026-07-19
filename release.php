@@ -50,6 +50,7 @@ $items = [
     'README.md',
     'LICENSE',
     'CHANGELOG.md',
+    'VERSION',
 
 ];
 
