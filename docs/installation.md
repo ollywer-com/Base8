@@ -1,6 +1,6 @@
 # Installation
 
-This guide explains how to install and configure a new Base8 application.
+This guide explains how to get started with the Base8 Starter package.
 
 ## Requirements
 
@@ -10,9 +10,21 @@ This guide explains how to install and configure a new Base8 application.
     - Nginx
     - Microsoft IIS (URL Rewrite)
 
+---
+
+## Getting Started
+
+Download the latest **Base8 Starter** package from the GitHub Releases page.
+
+Extract the archive to your preferred location.
+
+The starter package already contains the Base8 framework, application structure, and public directory.
+
+---
+
 ## Project Structure
 
-A typical Base8 project looks like this:
+A typical Base8 Starter project looks like this:
 
 ```text
 project/
@@ -29,18 +41,20 @@ project/
     ├── css/
     ├── images/
     ├── js/
-    ├── .htaccess
     ├── favicon.ico
     ├── index.php
-    ├── robots.txt
-    └── web.config
+    └── robots.txt
 ```
 
 The `framework` directory may have any name and may be located anywhere outside the public directory.
 
 The web server DocumentRoot must point to the `public` directory.
 
-The `favicon.ico`, `robots.txt`, `.htaccess`, and `web.config` files are optional and depend on your web server and application requirements.
+Depending on your web server, create the appropriate configuration:
+
+- Apache: `.htaccess`
+- Nginx: server configuration
+- IIS: `web.config`
 
 ---
 
@@ -58,7 +72,7 @@ require __DIR__ . '/../framework/Base8.php';
 Base8\Base8::run(__DIR__);
 ```
 
-The framework automatically locates the application directory.
+Base8 automatically locates the application directory.
 
 ---
 
@@ -95,6 +109,7 @@ server {
     server_name localhost;
 
     root /path/to/project/public;
+
     index index.php;
 
     location / {
@@ -167,7 +182,7 @@ Install the IIS URL Rewrite Module before using this configuration.
 
 ## First Module
 
-Create the file:
+Create:
 
 ```text
 app/modules/index.php
@@ -198,9 +213,9 @@ Hello Base8!
 
 ---
 
-## Application Directory
+## Application Structure
 
-The application directory contains three folders.
+The application consists of three directories.
 
 ```text
 app/
@@ -228,7 +243,7 @@ products.php
 
 ### views/
 
-Contains HTML views and reusable fragments.
+Contains PHP views and reusable HTML fragments.
 
 Example:
 
@@ -257,7 +272,7 @@ Supported pages:
 500.php
 ```
 
-If a file exists, Base8 renders it automatically.
+If a matching file exists, Base8 renders it automatically.
 
 ---
 
@@ -277,12 +292,26 @@ or open:
 http://localhost/project/build.php
 ```
 
-The generated `Base8.php` should be deployed with your application.
+The build process generates:
+
+```text
+framework/
+
+    Base8.php
+```
+
+The generated framework file is included in every Base8 Starter release.
 
 ---
 
-## Next Step
+## Next Steps
 
 Continue with:
 
+- requests.md
 - routing.md
+- responses.md
+- views.md
+- cookies.md
+- sessions.md
+- crypto.md
