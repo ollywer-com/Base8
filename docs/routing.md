@@ -261,6 +261,52 @@ does not exist, Base8 returns:
 
 ---
 
+## Module Guard
+
+If the resolved module declares a `_before()` function, Base8 calls it before the action.
+
+```php
+// app/modules/admin.php
+
+function _before(string $action, array $params): void
+{
+    if ($action === 'login') {
+        return;
+    }
+
+    if (!b8_session_get('user_id')) {
+        b8_redirect('/admin/login');
+    }
+}
+
+function login(): void
+{
+}
+
+function dashboard(): void
+{
+}
+```
+
+The guard receives the resolved action name and the route parameters.
+
+To block a request, terminate it from inside the guard using `b8_error()`, `b8_redirect()`, or `b8_json()`. Returning normally allows the action to run.
+
+The guard is not routable. `_before` begins with an underscore, so it can never be reached as a URL.
+
+The guard runs even when the action does not exist:
+
+```text
+/admin/dashboard      → guard runs → 401
+/admin/does-not-exist → guard runs → 401
+```
+
+This is intentional. An unauthorized visitor cannot discover which actions a protected module defines. Once the guard passes, a missing action returns `404` as usual.
+
+Only one guard runs per request, because only one module is ever loaded.
+
+---
+
 ## URL Length
 
 Very long URLs are rejected automatically.

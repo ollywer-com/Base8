@@ -22,6 +22,35 @@ echo 'Access denied.';
 
 ---
 
+## Error Pages
+
+Use `b8_error()` to terminate the request with a status code and render the matching page from `app/errors/`.
+
+```php
+b8_error(404);
+```
+
+If `app/errors/404.php` exists it is rendered, otherwise the bare status code is sent. Either way the request ends immediately.
+
+```php
+function profile(string $id): void
+{
+    $user = find_user($id);
+
+    if ($user === null) {
+        b8_error(404);
+    }
+
+    b8_view('profile', ['user' => $user]);
+}
+```
+
+This is the same mechanism the kernel uses for its own errors, so application errors and framework errors render identically.
+
+Use `b8_status()` when you want to set a status code and keep executing. Use `b8_error()` when the request should end.
+
+---
+
 ## Redirects
 
 Use `b8_redirect()` to redirect the client to another URL.

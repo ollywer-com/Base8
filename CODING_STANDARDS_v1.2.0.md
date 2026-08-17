@@ -1,6 +1,6 @@
 # Base8 Coding Standards
 
-Version: 1.1.0
+Version: 1.2.0
 
 ------------------------------------------------------------------------
 
@@ -417,9 +417,13 @@ Rules:
 
 -   Missing module → 404
 -   Missing action → 404
--   Unsupported HTTP method → 405
 -   URI too long → 414
 -   Uncaught exception/fatal error → 500
+
+The kernel never rejects an HTTP method on its own. Actions opt in with
+`b8_method_allow()`, which sends an `Allow` header and → 405.
+
+Applications may render any error page directly with `b8_error()`.
 
 If an error page does not exist, only the HTTP status code is returned.
 
@@ -441,6 +445,16 @@ It must:
 
 Application security (SQL injection, XSS, CSRF, authentication,
 authorization, uploads, etc.) belongs outside the kernel.
+
+The kernel provides one hook for it: if the resolved module declares
+`_before()`, the kernel calls it before the action. The kernel does not
+decide what the guard does — it only guarantees that the guard runs, and
+that it runs even when the requested action does not exist.
+
+Helpers may supply security primitives, but must never apply them on their
+own. `b8_csrf_*` issues and compares tokens; it never verifies a request
+unless the application asks. The rule is that no request is ever rejected
+by a check the application did not write.
 
 
 ------------------------------------------------------------------------

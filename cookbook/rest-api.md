@@ -70,13 +70,7 @@ function user(string $id): void
 
 function createUser(): void
 {
-    if (!b8_method('POST')) {
-
-        b8_status(405);
-
-        exit();
-
-    }
+    b8_method_allow('POST');
 
     $name = trim(
         b8_post('name', '')
@@ -206,6 +200,74 @@ HTTP/1.1 400 Bad Request
 
 ---
 
+# Unsupported Method
+
+`createUser()` calls `b8_method_allow('POST')`, so any other method is rejected before the action runs:
+
+```text
+GET /api/create-user
+```
+
+```http
+HTTP/1.1 405 Method Not Allowed
+Allow: POST
+```
+
+---
+
+# Protecting the API
+
+The API above is public. Every endpoint answers anyone who asks.
+
+To require a token, declare `_before()` in the module. Base8 calls it before the action, so a single function protects every endpoint at once.
+
+```php
+function _before(string $action, array $params): void
+{
+    if ($action === 'users') {
+        return;
+    }
+
+    $header = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+
+    if (
+        preg_match('/^Bearer\s+(\S+)$/i', $header, $matches) !== 1 ||
+        !hash_equals((string) getenv('API_TOKEN'), $matches[1])
+    ) {
+
+        header('WWW-Authenticate: Bearer');
+
+        b8_json(
+            [
+                'success' => false,
+                'message' => 'Unauthorized.'
+            ],
+            401
+        );
+
+    }
+}
+```
+
+Requests without a valid token now receive:
+
+```http
+HTTP/1.1 401 Unauthorized
+```
+
+```json
+{
+    "success": false,
+    "message": "Unauthorized."
+}
+```
+
+A token-authenticated API does not need CSRF protection, because browsers never attach an `Authorization` header automatically. If the same endpoints also accept a session cookie, CSRF protection becomes necessary again.
+
+Apache does not always forward the `Authorization` header to PHP. See **auth.md** for the full guide, including the required `.htaccess` rule.
+
+---
+
 # Summary
 
 In this guide you learned how to:
@@ -214,4 +276,6 @@ In this guide you learned how to:
 - return JSON data
 - receive route parameters
 - process POST requests
+- restrict an endpoint to a single HTTP method
+- protect endpoints with a module guard
 - return appropriate HTTP status codes

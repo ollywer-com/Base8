@@ -160,6 +160,38 @@ All produce the same result.
 
 ---
 
+## Restricting Methods
+
+`b8_method_allow()` restricts an action to one or more HTTP methods.
+
+```php
+function save(): void
+{
+    b8_method_allow('POST');
+
+    // Only reached on POST.
+}
+```
+
+Several methods may be allowed:
+
+```php
+b8_method_allow('POST', 'PUT', 'PATCH');
+```
+
+When the request method matches, the helper returns and the action continues.
+
+When it does not match, Base8 sends an `Allow` header, renders `app/errors/405.php` if it exists, and terminates the request:
+
+```text
+HTTP/1.1 405 Method Not Allowed
+Allow: POST, PUT, PATCH
+```
+
+Method names are case-insensitive and are always normalized to uppercase in the `Allow` header.
+
+---
+
 ## CLI
 
 When no HTTP request exists, `b8_method()` returns:

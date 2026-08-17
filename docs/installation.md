@@ -85,6 +85,15 @@ Create `public/.htaccess`.
 
     RewriteEngine On
 
+    # Apache withholds the Authorization header from PHP by default.
+    # Without this rule, bearer tokens never reach the application.
+
+    RewriteCond %{HTTP:Authorization} .
+
+    RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Front controller.
+
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
@@ -94,6 +103,16 @@ Create `public/.htaccess`.
 ```
 
 Enable `mod_rewrite` if it is not already enabled.
+
+The first rule matters only for applications that read the `Authorization` header, such as APIs using bearer tokens. Apache withholds that header from the script environment by default, so without this rule the value never reaches PHP at all. After the rewrite it arrives as both `HTTP_AUTHORIZATION` and `REDIRECT_HTTP_AUTHORIZATION`, so read whichever is present:
+
+```php
+$header = $_SERVER['HTTP_AUTHORIZATION']
+    ?? $_SERVER['REDIRECT_HTTP_AUTHORIZATION']
+    ?? '';
+```
+
+`.htaccess` requires `AllowOverride All` for the directory. Nginx forwards the header to PHP-FPM without extra configuration.
 
 ---
 
@@ -314,4 +333,5 @@ Continue with:
 - views.md
 - cookies.md
 - sessions.md
+- csrf.md
 - crypto.md

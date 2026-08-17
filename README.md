@@ -128,6 +128,36 @@ Hyphenated action names are automatically converted to camelCase.
 
 ---
 
+# Protecting a Module
+
+Declare `_before()` in a module and Base8 calls it before the action.
+
+```php
+function _before(string $action, array $params): void
+{
+    if ($action === 'login') {
+        return;
+    }
+
+    if (!b8_session_get('user_id')) {
+        b8_redirect('/admin/login');
+    }
+}
+```
+
+Restrict an action to specific HTTP methods:
+
+```php
+function save(): void
+{
+    b8_method_allow('POST', 'PUT');
+}
+```
+
+The guard runs even when the requested action does not exist, so a protected module never reveals which actions it defines.
+
+---
+
 # Rendering Views
 
 ```php
@@ -152,6 +182,8 @@ b8_json([
 ]);
 
 b8_status(404);
+
+b8_error(404);
 ```
 
 ---
@@ -184,18 +216,46 @@ Sessions start automatically when required.
 
 ---
 
+# CSRF Protection
+
+```php
+<?= b8_csrf_field() ?>
+```
+
+```php
+function send(): void
+{
+    b8_method_allow('POST');
+
+    b8_csrf_require();
+}
+```
+
+The token is read from the `csrf_token` POST field, or from the `X-CSRF-Token` header for AJAX requests. Comparison is timing-safe.
+
+Verification is never automatic — each action or module guard opts in.
+
+---
+
 # Error Pages
 
-Supported custom error pages:
+Error pages triggered by the kernel:
 
 ```text
 404.php
-405.php
 414.php
 500.php
 ```
 
 If the corresponding file exists in `app/errors`, Base8 renders it automatically.
+
+Applications render any other status themselves:
+
+```php
+b8_error(403);
+```
+
+`b8_method_allow()` renders `405.php`, and `b8_csrf_require()` renders `403.php`.
 
 ---
 
@@ -247,6 +307,7 @@ Read the documentation:
 - [Views](docs/views.md)
 - [Cookies](docs/cookies.md)
 - [Sessions](docs/sessions.md)
+- [CSRF Protection](docs/csrf.md)
 - [Cryptography](docs/crypto.md)
 
 ---

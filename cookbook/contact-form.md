@@ -45,6 +45,8 @@ app/views/contact.php
 
 <form method="post">
 
+    <?= b8_csrf_field() ?>
+
     <label>Name</label><br>
 
     <input
@@ -104,6 +106,8 @@ declare(strict_types=1);
 function index(): void
 {
     if (b8_method('POST')) {
+
+        b8_csrf_require();
 
         $name = trim(
             b8_post('name', '')
@@ -184,4 +188,5 @@ In this guide you learned how to:
 - process POST requests
 - retrieve form data
 - validate user input
+- protect a form against CSRF
 - render a form using a view
