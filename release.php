@@ -26,10 +26,6 @@ require __DIR__ . '/framework/Base8.php';
 
 $version = b8_version();
 
-if ($version === '') {
-    exit("VERSION file is empty.\n");
-}
-
 $releaseDir = __DIR__ . '/release';
 
 $zipName = "Base8-Starter-v{$version}.zip";
@@ -39,6 +35,7 @@ $zipFile = $releaseDir . DIRECTORY_SEPARATOR . $zipName;
 $items = [
 
     'app',
+    'cookbook',
     'docs',
     'framework',
     'public',
@@ -52,12 +49,6 @@ $items = [
 if (!is_dir($releaseDir)) {
 
     mkdir($releaseDir, 0777, true);
-
-}
-
-if (is_file($zipFile)) {
-
-    unlink($zipFile);
 
 }
 
@@ -98,7 +89,13 @@ foreach ($items as $item) {
 
 }
 
-$zip->close();
+if (!$zip->close()) {
+
+    exit("Cannot write release archive.\n");
+
+}
+
+clearstatcache(true, $zipFile);
 
 $duration = number_format(
     (microtime(true) - $start) * 1000,
@@ -113,6 +110,25 @@ $size = number_format(
 $count = count($items);
 
 if (PHP_SAPI === 'cli') {
+
+    echo PHP_EOL;
+    echo "======================================================" . PHP_EOL;
+    echo "                 Base8 Release Builder" . PHP_EOL;
+    echo "======================================================" . PHP_EOL;
+    echo PHP_EOL;
+    echo " Version      : {$version}" . PHP_EOL;
+    echo " Package      : Base8 Starter" . PHP_EOL;
+    echo " Items        : {$count}" . PHP_EOL;
+    echo " Archive      : {$zipName}" . PHP_EOL;
+    echo " Output       : release/" . PHP_EOL;
+    echo " Archive size : {$size} KB" . PHP_EOL;
+    echo " Build time   : {$buildTime}" . PHP_EOL;
+    echo " Duration     : {$duration} ms" . PHP_EOL;
+    echo PHP_EOL;
+    echo " Status       : SUCCESS" . PHP_EOL;
+    echo PHP_EOL;
+    echo "======================================================" . PHP_EOL;
+
     exit();
 }
 
