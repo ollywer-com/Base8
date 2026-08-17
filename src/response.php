@@ -36,6 +36,22 @@ function b8_redirect(string $url, int $code = 302): never
 }
 
 /**
+ * Terminates the request with the specified HTTP status code.
+ *
+ * Renders the matching page from the application errors directory when one
+ * exists, otherwise sends the bare status code.
+ *
+ * @param int $code
+ *     HTTP response status code.
+ *
+ * @return never
+ */
+function b8_error(int $code): never
+{
+    \Base8\Base8::error($code);
+}
+
+/**
  * Sends a JSON response.
  *
  * @param mixed $data

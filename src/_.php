@@ -9,7 +9,7 @@ namespace Base8 {
         /**
          * Framework version.
          */
-        public const VERSION = '1.1.1';
+        public const VERSION = '1.2.0';
 
         /**
          * Minimum supported PHP version.
@@ -23,6 +23,11 @@ namespace Base8 {
 
         /**
          * Framework entry point.
+         *
+         * When the resolved module file declares a _before() function, it is
+         * called before the action. It receives the resolved action name and
+         * the route parameters, and runs even when the action does not exist,
+         * so a guard cannot be bypassed by requesting an unknown action.
          *
          * @param string $root
          *     Absolute path to the application root directory.
@@ -124,6 +129,10 @@ namespace Base8 {
 
             require $file;
 
+            if (function_exists('_before')) {
+                \_before($action, $params);
+            }
+
             if (!function_exists($action)) {
                 self::error($module === 'index' ? 500 : 404);
             }
@@ -186,7 +195,7 @@ namespace Base8 {
          *
          * @return never
          */
-        private static function error(int $code): never
+        public static function error(int $code): never
         {
             http_response_code($code);
 

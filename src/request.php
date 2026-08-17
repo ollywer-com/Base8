@@ -93,3 +93,37 @@ function b8_method(?string $method = null): string|bool
 
     return strtoupper($method) === strtoupper($current);
 }
+
+/**
+ * Restricts the current action to the supplied HTTP methods.
+ *
+ * Returns silently when the request method matches. Otherwise sends an Allow
+ * header and terminates the request with 405.
+ *
+ * @param string $method
+ *     Allowed HTTP method.
+ *
+ * @param string ...$methods
+ *     Additional allowed HTTP methods.
+ *
+ * @return void
+ */
+function b8_method_allow(string $method, string ...$methods): void
+{
+    $allowed = [];
+
+    foreach ([$method, ...$methods] as $candidate) {
+
+        $candidate = strtoupper($candidate);
+
+        if (b8_method($candidate)) {
+            return;
+        }
+
+        $allowed[] = $candidate;
+    }
+
+    header('Allow: ' . implode(', ', $allowed));
+
+    b8_error(405);
+}
