@@ -9,7 +9,7 @@ namespace Base8 {
         /**
          * Framework version.
          */
-        public const VERSION = '1.2.1';
+        public const VERSION = '1.2.2';
 
         /**
          * Minimum supported PHP version.
@@ -140,7 +140,9 @@ namespace Base8 {
             }
 
             if (!self::isModuleFunction($action, $file)) {
-                self::error($module === 'index' ? 500 : 404);
+                self::error(
+                    $module === 'index' && $action === 'index' ? 500 : 404
+                );
             }
 
             $action(...$params);

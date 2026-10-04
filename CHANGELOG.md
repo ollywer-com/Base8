@@ -6,6 +6,16 @@ The format is based on Keep a Changelog.
 
 ---
 
+## [1.2.2] - 2026-10-04
+
+### Fixed
+
+- An unknown action in the `index` module returns 404 instead of 500, so a
+  mistyped link such as `/index/missing` no longer shows a server error.
+  500 is now reserved for a missing `index` module or `index()` action.
+
+---
+
 ## [1.2.1] - 2026-10-04
 
 ### Added

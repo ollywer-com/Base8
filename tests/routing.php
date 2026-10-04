@@ -189,15 +189,18 @@ $cases = [
     ['/index/hello/world', false, 200, 'hello-action:world'],
     ['/pages/change-password', false, 200, 'change-password-action'],
 
+    // An unknown action in the index module is a 404, not a 500.
+    ['/index/missing', false, 404, ''],
+
     // Built-in PHP functions are not routable.
     ['/pages/phpinfo', false, 404, ''],
     ['/pages/phpversion', false, 404, ''],
-    ['/index/phpinfo', false, 500, ''],
-    ['/index/phpversion', false, 500, ''],
+    ['/index/phpinfo', false, 404, ''],
+    ['/index/phpversion', false, 404, ''],
 
     // Functions from other files are not routable.
     ['/pages/secret', false, 404, ''],
-    ['/index/secret', false, 500, ''],
+    ['/index/secret', false, 404, ''],
 
     // The guard still runs before the action, even for unknown actions.
     ['/admin/dashboard', false, 401, 'guard:dashboard;'],
