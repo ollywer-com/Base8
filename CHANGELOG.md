@@ -6,6 +6,26 @@ The format is based on Keep a Changelog.
 
 ---
 
+## [1.2.1] - 2026-10-04
+
+### Added
+
+- Routing tests (`php tests/routing.php`)
+
+### Security
+
+- Only functions declared in the resolved module file are routable as
+  actions. Previously any existing function matched, so `/index/phpinfo`
+  executed `phpinfo()` and a URL could call any global helper from another
+  file whose name matched the segment. Such routes now return 404 (500 for
+  the `index` module, as for other missing actions there). The module guard
+  still runs first, so unknown actions stay hidden behind it.
+- The module guard `_before()` is called only when it is declared in the
+  resolved module file. Previously a `_before()` from any other loaded file,
+  such as a helper in `app/lib`, ran as the guard of every module.
+
+---
+
 ## [1.2.0] - 2026-08-17
 
 ### Added

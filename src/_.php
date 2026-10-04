@@ -9,7 +9,7 @@ namespace Base8 {
         /**
          * Framework version.
          */
-        public const VERSION = '1.2.0';
+        public const VERSION = '1.2.1';
 
         /**
          * Minimum supported PHP version.
@@ -28,6 +28,12 @@ namespace Base8 {
          * called before the action. It receives the resolved action name and
          * the route parameters, and runs even when the action does not exist,
          * so a guard cannot be bypassed by requesting an unknown action.
+         *
+         * Only a user-defined function declared in the module file itself is
+         * routable. Built-in PHP functions and functions from other files
+         * resolve to 404, even when a function with that name exists. The
+         * same applies to _before(): a guard declared in another file is
+         * never called.
          *
          * @param string $root
          *     Absolute path to the application root directory.
@@ -129,11 +135,11 @@ namespace Base8 {
 
             require $file;
 
-            if (function_exists('_before')) {
+            if (self::isModuleFunction('_before', $file)) {
                 \_before($action, $params);
             }
 
-            if (!function_exists($action)) {
+            if (!self::isModuleFunction($action, $file)) {
                 self::error($module === 'index' ? 500 : 404);
             }
 
@@ -185,6 +191,34 @@ namespace Base8 {
             }
 
             return true;
+        }
+
+        /**
+         * Checks whether a function is declared in the given module file.
+         *
+         * Built-in PHP functions and functions declared in other files never
+         * match, so a route cannot reach them.
+         *
+         * @param string $name
+         *     Function name.
+         *
+         * @param string $file
+         *     Absolute path to the module file.
+         *
+         * @return bool
+         *     True if the function is declared in the module file, otherwise
+         *     false.
+         */
+        private static function isModuleFunction(string $name, string $file): bool
+        {
+            if (!function_exists($name)) {
+                return false;
+            }
+
+            $fn = new \ReflectionFunction($name);
+
+            return $fn->isUserDefined() &&
+                realpath((string) $fn->getFileName()) === realpath($file);
         }
 
         /**

@@ -259,6 +259,13 @@ does not exist, Base8 returns:
 404 Not Found
 ```
 
+Only functions declared in the module file itself are actions. Built-in PHP functions and functions loaded from other files are never routable, even when their name matches the segment:
+
+```text
+/users/phpinfo        → 404
+/users/format-date    → 404   (formatDate() declared in app/lib/helpers.php)
+```
+
 ---
 
 ## Module Guard
@@ -293,6 +300,8 @@ The guard receives the resolved action name and the route parameters.
 To block a request, terminate it from inside the guard using `b8_error()`, `b8_redirect()`, or `b8_json()`. Returning normally allows the action to run.
 
 The guard is not routable. `_before` begins with an underscore, so it can never be reached as a URL.
+
+The guard must be declared in the module file itself. A `_before()` loaded from another file, such as `app/lib`, is ignored.
 
 The guard runs even when the action does not exist:
 
