@@ -416,7 +416,7 @@ app/errors/
 Rules:
 
 -   Missing module → 404
--   Missing action → 404
+-   Missing action → 404, unless the module declares `_fallback()`
 -   URI too long → 414
 -   Uncaught exception/fatal error → 500
 

@@ -9,7 +9,7 @@ namespace Base8 {
         /**
          * Framework version.
          */
-        public const VERSION = '1.2.2';
+        public const VERSION = '1.3.0';
 
         /**
          * Minimum supported PHP version.
@@ -34,6 +34,12 @@ namespace Base8 {
          * resolve to 404, even when a function with that name exists. The
          * same applies to _before(): a guard declared in another file is
          * never called.
+         *
+         * When the action does not exist and the module file declares a
+         * _fallback() function, it is called instead of returning 404. It
+         * receives the action segment as written in the URL, lowercased and
+         * not converted to camelCase, and the route parameters. It is never
+         * called when the URL has no action segment.
          *
          * @param string $root
          *     Absolute path to the application root directory.
@@ -67,6 +73,7 @@ namespace Base8 {
             $module = 'index';
             $action = 'index';
             $params = [];
+            $slug = null;
 
             $path = parse_url(
                 $_SERVER['REQUEST_URI'] ?? '/',
@@ -110,6 +117,8 @@ namespace Base8 {
                         self::error(404);
                     }
 
+                    $slug = $action;
+
                     if (str_contains($action, '-')) {
 
                         $parts = explode('-', $action);
@@ -140,6 +149,15 @@ namespace Base8 {
             }
 
             if (!self::isModuleFunction($action, $file)) {
+
+                if (
+                    $slug !== null &&
+                    self::isModuleFunction('_fallback', $file)
+                ) {
+                    \_fallback($slug, $params);
+                    return;
+                }
+
                 self::error(
                     $module === 'index' && $action === 'index' ? 500 : 404
                 );

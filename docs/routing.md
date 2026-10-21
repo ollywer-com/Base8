@@ -316,6 +316,44 @@ Only one guard runs per request, because only one module is ever loaded.
 
 ---
 
+## Fallback
+
+If the requested action does not exist and the module declares a `_fallback()` function, Base8 calls it instead of returning `404`. Use it for pages addressed by a slug:
+
+```php
+// app/modules/page.php
+
+function _fallback(string $slug, array $params): void
+{
+    $page = find_page($slug);
+
+    if ($page === null) {
+        b8_error(404);
+    }
+
+    b8_view('page', ['page' => $page]);
+}
+```
+
+```text
+/page/aims-and-scope       → _fallback('aims-and-scope', [])
+/page/aims-and-scope/print → _fallback('aims-and-scope', ['print'])
+```
+
+The fallback receives the action segment as written in the URL, lowercased but not converted to camelCase, and the route parameters. The segment has already passed route validation, so it contains only letters, digits, and hyphens.
+
+A real action always takes precedence. If the module declares `aimsAndScope()`, `/page/aims-and-scope` runs that action, not the fallback. So a page whose slug matches an action name, such as `index`, cannot be reached through the fallback.
+
+Names of built-in PHP functions are not actions, so `/page/phpinfo` calls `_fallback('phpinfo', [])`.
+
+The fallback is not called when the URL has no action segment. `/page` runs `index()`, or returns `404` when the module does not declare it.
+
+The guard runs first. `_before()` receives the camelCase action name (`aimsAndScope`), then `_fallback()` receives the original segment (`aims-and-scope`).
+
+Like the guard, the fallback must be declared in the module file itself, and it is not routable because its name begins with an underscore.
+
+---
+
 ## URL Length
 
 Very long URLs are rejected automatically.

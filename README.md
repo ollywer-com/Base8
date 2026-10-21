@@ -158,6 +158,23 @@ The guard runs even when the requested action does not exist, so a protected mod
 
 ---
 
+# Pages by Slug
+
+Declare `_fallback()` in a module and Base8 calls it when the requested action does not exist, instead of returning 404.
+
+```php
+// /page/aims-and-scope → _fallback('aims-and-scope', [])
+
+function _fallback(string $slug, array $params): void
+{
+    // Load the page by its slug, or b8_error(404)
+}
+```
+
+A real action always takes precedence over the fallback.
+
+---
+
 # Rendering Views
 
 ```php

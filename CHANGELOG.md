@@ -6,6 +6,19 @@ The format is based on Keep a Changelog.
 
 ---
 
+## [1.3.0] - 2026-10-21
+
+### Added
+
+- Module fallback hook `_fallback()`. When the requested action does not
+  exist and the module declares it, Base8 calls it with the original
+  action segment and the route parameters instead of returning 404, so a
+  module can serve pages by slug, such as `/page/aims-and-scope`. A real
+  action always takes precedence, the guard runs first, and a fallback
+  declared outside the module file is ignored.
+
+---
+
 ## [1.2.2] - 2026-10-04
 
 ### Fixed

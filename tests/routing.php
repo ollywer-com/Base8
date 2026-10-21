@@ -67,6 +67,47 @@ $files = [
 
             Base8\Base8::error(403);
         }
+
+        function _fallback(string $slug, array $params): void
+        {
+            echo 'foreign-fallback;';
+        }
+        PHP,
+
+    'app/modules/page.php' => <<<'PHP'
+        <?php
+
+        declare(strict_types=1);
+
+        function about(): void
+        {
+            echo 'about-action';
+        }
+
+        function _fallback(string $slug, array $params): void
+        {
+            echo "fallback:$slug:" . implode(',', $params);
+        }
+        PHP,
+
+    'app/modules/secure.php' => <<<'PHP'
+        <?php
+
+        declare(strict_types=1);
+
+        function _before(string $action, array $params): void
+        {
+            echo "guard:$action;";
+
+            if (getenv('BASE8_AUTH') !== 'yes') {
+                Base8\Base8::error(401);
+            }
+        }
+
+        function _fallback(string $slug, array $params): void
+        {
+            echo "fallback:$slug";
+        }
         PHP,
 
     'app/modules/open.php' => <<<'PHP'
@@ -211,6 +252,22 @@ $cases = [
     // A guard declared in another file is never called.
     ['/open', false, 200, 'open-action'],
     ['/open/missing', false, 404, ''],
+
+    // _fallback() handles unknown actions with the original segment.
+    ['/page/aims-and-scope', false, 200, 'fallback:aims-and-scope:'],
+    ['/page/aims-and-scope/a/b', false, 200, 'fallback:aims-and-scope:a,b'],
+    ['/page/Aims-And-Scope', false, 200, 'fallback:aims-and-scope:'],
+    ['/page/phpinfo', false, 200, 'fallback:phpinfo:'],
+
+    // A real action takes precedence over _fallback().
+    ['/page/about', false, 200, 'about-action'],
+
+    // _fallback() is not called without an action segment.
+    ['/page', false, 404, ''],
+
+    // The guard runs before _fallback().
+    ['/secure/some-page', false, 401, 'guard:somePage;'],
+    ['/secure/some-page', true, 200, 'guard:somePage;fallback:some-page'],
 
 ];
 
